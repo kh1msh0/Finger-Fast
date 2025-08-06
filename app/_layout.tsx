@@ -11,18 +11,15 @@ import { useEffect, useState } from "react";
 import "react-native-reanimated";
 
 import { useColorScheme } from "@/components/useColorScheme";
-// import { StatusBar } from "expo-status-bar";
 
-// import { requestTrackingPermissionsAsync } from "expo-tracking-transparency";
 
-// import {
-//   AdEventType,
-//   AdsConsent,
-//   AdsConsentStatus,
-//   InterstitialAd,
-//   TestIds,
-// } from "react-native-google-mobile-ads";
-// import mobileAds from "react-native-google-mobile-ads/src";
+import { requestTrackingPermissionsAsync } from "expo-tracking-transparency";
+
+import {
+  AdsConsent,
+  AdsConsentStatus
+} from "react-native-google-mobile-ads";
+import mobileAds from "react-native-google-mobile-ads/src";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -45,26 +42,26 @@ export default function RootLayout() {
 
   const [adsLoaded, setAdsLoaded] = useState(false);
 
-  // useEffect(() => {
-  //   const prepare = async () => {
-  //     // TODO: if the ATT doesn't show up, add a small delay
-  //     await requestTrackingPermissionsAsync();
-  //     try {
-  //       const consentInfo = await AdsConsent.requestInfoUpdate();
-  //       if (
-  //         consentInfo.isConsentFormAvailable &&
-  //         consentInfo.status === AdsConsentStatus.REQUIRED
-  //       ) {
-  //         await AdsConsent.showForm();
-  //       }
-  //       await mobileAds().initialize();
-  //       setAdsLoaded(true);
-  //     } catch (e) {
-  //       console.log("error", e);
-  //     }
-  //   };
-  //   void prepare();
-  // }, []);
+  useEffect(() => {
+    const prepare = async () => {
+      // TODO: if the ATT doesn't show up, add a small delay
+      await requestTrackingPermissionsAsync();
+      try {
+        const consentInfo = await AdsConsent.requestInfoUpdate();
+        if (
+          consentInfo.isConsentFormAvailable &&
+          consentInfo.status === AdsConsentStatus.REQUIRED
+        ) {
+          await AdsConsent.showForm();
+        }
+        await mobileAds().initialize();
+        setAdsLoaded(true);
+      } catch (e) {
+        console.log("error", e);
+      }
+    };
+    void prepare();
+  }, []);
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
   useEffect(() => {
@@ -93,10 +90,6 @@ function RootLayoutNav() {
 
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      {/* <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
-      </Stack> */}
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="index" options={{ animation: "fade" }} />
         <Stack.Screen name="game" options={{ animation: "none" }} />

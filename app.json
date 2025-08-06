@@ -4,21 +4,37 @@
     "slug": "Finger-Fast",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/icons/ios-light.png",
     "scheme": "fingerfast",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.gio-khimsho.FingerFast"
+      "bundleIdentifier": "com.gio-khimsho.FingerFast",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      },
+      "config": {
+        "usesNonExemptEncryption": false
+      },
+      "icon": {
+        "light": "./assets/images/icons/ios-light.png",
+        "dark": "./assets/images/icons/ios-dark.png",
+        "tinted": "./assets/images/icons/ios-tinted.png"
+      }
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/icons/adaptive-icon.png",
+        "monochromeImage": "./assets/images/icons/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.gio_khimsho.FingerFast"
+      "package": "com.gio_khimsho.FingerFast",
+      "permissions": [
+        "com.google.android.gms.permission.AD_ID",
+        "com.google.android.gms.permission.AD_ID"
+      ]
     },
     "web": {
       "bundler": "metro",
@@ -27,13 +43,38 @@
     },
     "plugins": [
       "expo-router",
+      "expo-tracking-transparency",
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
+          "image": "./assets/images/icons/splash-icon-dark.png",
           "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
+          "backgroundColor": "#ffffff",
+          "dark": {
+            "image": "./assets/images/icons/splash-icon-dark.png",
+            "backgroundColor": "#000"
+          }
+        }
+      ],
+      [
+        "react-native-google-mobile-ads",
+        {
+          "androidAppId": "ca-app-pub-8296385442547902~7491568433",
+          "iosAppId": "ca-app-pub-8296385442547902~8982951378",
+          "userTrackingUsageDescription": "This identifier will be used to deliver personalized ads to you."
+        }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "enableProguardInReleaseBuilds": true,
+            "extraProguardRules": "-keep class com.google.android.gms.** { *; }"
+          },
+          "ios": {
+            "useFrameworks": "static"
+          }
         }
       ]
     ],
@@ -46,6 +87,12 @@
         "projectId": "f9d5f1ea-9231-42b5-a0d7-ccecb83e3923"
       }
     },
-    "owner": "gio_khimsho"
+    "owner": "gio_khimsho",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/f9d5f1ea-9231-42b5-a0d7-ccecb83e3923"
+    }
   }
 }

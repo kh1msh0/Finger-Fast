@@ -1,15 +1,9 @@
 import { useHighScore } from "@/hooks/useHighScore";
 import { LinearGradient } from "expo-linear-gradient";
 import { router, useLocalSearchParams } from "expo-router";
-import { RotateCcw, Trophy, Zap } from "lucide-react-native";
+import { CircleDot, RotateCcw, Trophy, Zap } from "lucide-react-native";
 import React, { useEffect, useState } from "react";
-import {
-  Dimensions,
-  Pressable,
-  StyleSheet,
-  Text,
-  View
-} from "react-native";
+import { Dimensions, Pressable, StyleSheet, Text, View } from "react-native";
 
 const { height } = Dimensions.get("window");
 
@@ -56,7 +50,7 @@ export default function ResultsScreen() {
   };
 
   const playAgain = () => {
-    router.push(`/game?mode=${gameDuration}`);
+    router.replace(`/game?mode=${gameDuration}`);
   };
 
   const goHome = () => {
@@ -73,12 +67,24 @@ export default function ResultsScreen() {
       <View style={styles.content}>
         {/* Results Section */}
         <View style={styles.resultsSection}>
-          <Text style={styles.title}>Your Speed ({gameDuration}s):</Text>
-
-          <View style={styles.speedContainer}>
-            <Zap size={24} color="#FFE020" />
-            <Text style={styles.speedNumber}>{currentSpeed}</Text>
-            <Text style={styles.speedUnit}>taps/second</Text>
+          <Text style={styles.title}>Taping Duration {gameDuration}s:</Text>
+          <View>
+            <View style={styles.speedContainer}>
+              <Zap size={24} color="#FFE020" />
+              <Text style={styles.speedNumber}>{currentSpeed}</Text>
+              <Text style={styles.speedUnit}>Taps/second</Text>
+            </View>
+            <View style={{ width: 20 }} />
+            <View
+              style={[
+                styles.speedContainer,
+                { backgroundColor: "rgba(9, 164, 170, 0.82)" },
+              ]}
+            >
+              <CircleDot size={24} color="#FFE020" />
+              <Text style={styles.speedNumber}>{currentTapCount}</Text>
+              <Text style={styles.speedUnit}>Taps in {gameDuration}s</Text>
+            </View>
           </View>
 
           <Text style={styles.motivationText}>{getMotivationalMessage()}</Text>
@@ -107,7 +113,6 @@ export default function ResultsScreen() {
               </View>
             )}
           </Pressable>
-
           <Pressable style={styles.homeButton} onPress={goHome}>
             {({ pressed }) => (
               <Text
@@ -138,8 +143,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 40,
   },
   resultsSection: {
-    alignItems: "center",
-    marginTop: 60,
+    marginTop: 40,
   },
   title: {
     fontSize: 32,
@@ -148,20 +152,22 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 30,
   },
+
   speedContainer: {
     backgroundColor: "rgba(255, 255, 255, 0.15)",
     borderRadius: 20,
-    paddingVertical: 24,
+    paddingVertical: 16,
     paddingHorizontal: 32,
     alignItems: "center",
-    marginBottom: 30,
-    minWidth: 200,
+    justifyContent: "center",
+    marginBottom: 10,
+    width: "100%",
   },
   speedNumber: {
     fontSize: 48,
     fontWeight: "bold",
     color: "white",
-    marginVertical: 8,
+    // marginVertical: 8,
   },
   speedUnit: {
     fontSize: 16,

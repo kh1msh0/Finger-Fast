@@ -2,55 +2,90 @@ import { useGameMode } from "@/hooks/useGameMode";
 import { useHighScore } from "@/hooks/useHighScore";
 import { GameMode } from "@/utils/storage";
 import { LinearGradient } from "expo-linear-gradient";
-import { Link } from "expo-router";
+import { useRouter } from "expo-router";
 import { Play, Trophy } from "lucide-react-native";
-import React from "react";
+import React, { useRef } from "react";
 import {
   Dimensions,
+  Platform,
   Pressable,
   StyleSheet,
   Text,
-  View
+  View,
 } from "react-native";
-// import {
-//   AdEventType,
-//   AdsConsent,
-//   InterstitialAd,
-//   TestIds,
-// } from "react-native-google-mobile-ads";
+import {
+  AdEventType,
+  AdsConsent,
+  BannerAd,
+  BannerAdSize,
+  InterstitialAd,
+  TestIds,
+  useForeground,
+} from "react-native-google-mobile-ads";
 
-const { width, height } = Dimensions.get("window");
+const INTERSTITIAL_adUnitId = __DEV__
+  ? TestIds.INTERSTITIAL
+  : "ca-app-pub-8296385442547902/6992196364";
+
+const ADAPTIVE_BANNER_adUnitId = __DEV__
+  ? TestIds.ADAPTIVE_BANNER
+  : "ca-app-pub-8296385442547902/6353886207";
+
+const { height } = Dimensions.get("window");
 
 export default function StartScreen() {
+  const bannerRef = useRef<BannerAd>(null);
+
   const { highScore } = useHighScore();
   const { gameMode, updateGameMode } = useGameMode();
   const [loading, setLoading] = React.useState(false);
+  const router = useRouter();
 
-//   const handleShowInterstitial = async () => {
-//     setLoading(true);
-//     const canRequest = await AdsConsent.requestInfoUpdate().then(
-//       (it) => it.canRequestAds
-//     );
-//     if (canRequest) {
-//       const interstitial = InterstitialAd.createForAdRequest(
-//         TestIds.INTERSTITIAL
-//       );
-//       interstitial.load();
-//       const unsubscribeLoaded = interstitial.addAdEventListener(
-//         AdEventType.LOADED,
-//         () => {
-//           interstitial.show({
-//             immersiveModeEnabled: true,
-//           });
-//           setLoading(false);
-//           unsubscribeLoaded();
-//         }
-//       );
-//     } else {
-//       console.log("Cant show the interstitial");
-//       setLoading(false);
-//     }
-//   };
+  useForeground(() => {
+    Platform.OS === "ios" && bannerRef.current?.load();
+  });
+
+  const handleShowInterstitial = async () => {
+    setLoading(true);
+    const canRequest = await AdsConsent.requestInfoUpdate().then(
+      (it) => it.canRequestAds
+    );
+    if (canRequest) {
+      const interstitial = InterstitialAd.createForAdRequest(
+        INTERSTITIAL_adUnitId
+      );
+      interstitial.load();
+
+      const unsubscribeLoaded = interstitial.addAdEventListener(
+        AdEventType.LOADED,
+        () => {
+          interstitial.show({
+            immersiveModeEnabled: true,
+          });
+
+          setLoading(false);
+          unsubscribeLoaded();
+        }
+      );
+
+      const unsubscribeClosed = interstitial.addAdEventListener(
+        AdEventType.CLOSED,
+        () => {
+          router.replace(`/game?mode=${gameMode}`);
+          unsubscribeClosed();
+        }
+      );
+    } else {
+      console.log("Can't show the interstitial");
+      setLoading(false);
+      // Navigate directly if ads can't be shown
+      router.replace(`/game?mode=${gameMode}`);
+    }
+  };
+
+  const play = () => {
+    handleShowInterstitial();
+  };
 
   return (
     <LinearGradient
@@ -59,11 +94,6 @@ export default function StartScreen() {
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
     >
-      {/* <Button
-        disabled={loading}
-        onPress={handleShowInterstitial}
-        title="Show interstitial"
-      /> */}
       <View style={styles.content}>
         {/* Title Section */}
         <View style={styles.titleSection}>
@@ -115,18 +145,24 @@ export default function StartScreen() {
         </View>
 
         {/* Start Button */}
-        <Link href={`/game?mode=${gameMode}`} asChild replace>
-          <Pressable style={styles.startButton}>
-            {({ pressed }) => (
-              <View
-                style={[styles.buttonContent, pressed && styles.buttonPressed]}
-              >
-                <Play size={20} color="#4F75FF" />
-                <Text style={styles.buttonText}>Start Game</Text>
-              </View>
-            )}
-          </Pressable>
-        </Link>
+
+        <Pressable style={styles.startButton} onPress={play} disabled={loading}>
+          {({ pressed }) => (
+            <View
+              style={[styles.buttonContent, pressed && styles.buttonPressed]}
+            >
+              <Play size={20} color="#4F75FF" />
+              <Text style={styles.buttonText}>Start Game</Text>
+            </View>
+          )}
+        </Pressable>
+      </View>
+      <View style={{ minHeight: 63 }}>
+        <BannerAd
+          ref={bannerRef}
+          unitId={ADAPTIVE_BANNER_adUnitId}
+          size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+        />
       </View>
     </LinearGradient>
   );
@@ -135,6 +171,7 @@ export default function StartScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingBottom: 20,
   },
   content: {
     flex: 1,
@@ -234,7 +271,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     paddingHorizontal: 32,
     paddingVertical: 16,
-    marginTop: 20,
+    marginTop: 10,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.15,
