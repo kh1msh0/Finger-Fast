@@ -14,18 +14,11 @@ import {
   View,
 } from "react-native";
 import {
-  AdEventType,
-  AdsConsent,
   BannerAd,
   BannerAdSize,
-  InterstitialAd,
   TestIds,
   useForeground,
 } from "react-native-google-mobile-ads";
-
-const INTERSTITIAL_adUnitId = __DEV__
-  ? TestIds.INTERSTITIAL
-  : "ca-app-pub-8296385442547902/6992196364";
 
 const ADAPTIVE_BANNER_adUnitId = __DEV__
   ? TestIds.ADAPTIVE_BANNER
@@ -38,53 +31,14 @@ export default function StartScreen() {
 
   const { highScore } = useHighScore();
   const { gameMode, updateGameMode } = useGameMode();
-  const [loading, setLoading] = React.useState(false);
   const router = useRouter();
 
   useForeground(() => {
     Platform.OS === "ios" && bannerRef.current?.load();
   });
 
-  const handleShowInterstitial = async () => {
-    setLoading(true);
-    const canRequest = await AdsConsent.requestInfoUpdate().then(
-      (it) => it.canRequestAds
-    );
-    if (canRequest) {
-      const interstitial = InterstitialAd.createForAdRequest(
-        INTERSTITIAL_adUnitId
-      );
-      interstitial.load();
-
-      const unsubscribeLoaded = interstitial.addAdEventListener(
-        AdEventType.LOADED,
-        () => {
-          interstitial.show({
-            immersiveModeEnabled: true,
-          });
-
-          setLoading(false);
-          unsubscribeLoaded();
-        }
-      );
-
-      const unsubscribeClosed = interstitial.addAdEventListener(
-        AdEventType.CLOSED,
-        () => {
-          router.replace(`/game?mode=${gameMode}`);
-          unsubscribeClosed();
-        }
-      );
-    } else {
-      console.log("Can't show the interstitial");
-      setLoading(false);
-      // Navigate directly if ads can't be shown
-      router.replace(`/game?mode=${gameMode}`);
-    }
-  };
-
   const play = () => {
-    handleShowInterstitial();
+    router.replace(`/game?mode=${gameMode}`);
   };
 
   return (
@@ -146,7 +100,7 @@ export default function StartScreen() {
 
         {/* Start Button */}
 
-        <Pressable style={styles.startButton} onPress={play} disabled={loading}>
+        <Pressable style={styles.startButton} onPress={play}>
           {({ pressed }) => (
             <View
               style={[styles.buttonContent, pressed && styles.buttonPressed]}
