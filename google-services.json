@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "979927332340",
+    "project_id": "finger-fast---tap-speed-test",
+    "storage_bucket": "finger-fast---tap-speed-test.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:979927332340:android:b45b11865289815939f5a1",
+        "android_client_info": {
+          "package_name": "com.gio_khimsho.FingerFast"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBfT_VWdAhPkEZCRZQr63CaaGOoj7g5j58"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

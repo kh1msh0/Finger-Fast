@@ -2,7 +2,7 @@
   "expo": {
     "name": "Finger Fast - Tap Speed Test",
     "slug": "Finger-Fast",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/images/icons/ios-light.png",
     "scheme": "fingerfast",
@@ -10,6 +10,7 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
+      "googleServicesFile": "./GoogleService-Info.plist",
       "bundleIdentifier": "com.gio-khimsho.FingerFast",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
@@ -30,6 +31,7 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
+      "googleServicesFile": "./google-services.json",
       "package": "com.gio_khimsho.FingerFast",
       "permissions": [
         "com.google.android.gms.permission.AD_ID",
@@ -44,6 +46,7 @@
     "plugins": [
       "expo-router",
       "expo-tracking-transparency",
+      "@react-native-firebase/app",
       [
         "expo-splash-screen",
         {
