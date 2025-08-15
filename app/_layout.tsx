@@ -21,6 +21,11 @@ import {
 } from "react-native-google-mobile-ads";
 import mobileAds from "react-native-google-mobile-ads/src";
 
+import { initializeApp } from 'firebase/app';
+
+// This alone might be sufficient since Expo handles the config
+const app = initializeApp({});
+
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary
