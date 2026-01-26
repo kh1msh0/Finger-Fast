@@ -22,13 +22,12 @@ export default function ResultsScreen() {
   const gameDuration = parseInt(duration || "10");
 
   useEffect(() => {
+    const checkHighScore = async () => {
+      const isNew = await updateHighScore(currentSpeed);
+      setIsNewHighScore(isNew);
+    };
     checkHighScore();
-  }, [currentSpeed]);
-
-  const checkHighScore = async () => {
-    const isNew = await updateHighScore(currentSpeed);
-    setIsNewHighScore(isNew);
-  };
+  }, [currentSpeed, updateHighScore]);
 
   const getMotivationalMessage = () => {
     if (isNewHighScore) {

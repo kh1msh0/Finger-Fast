@@ -7,28 +7,19 @@ import {
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import "react-native-reanimated";
 
 import { useColorScheme } from "@/components/useColorScheme";
 
-
 import { requestTrackingPermissionsAsync } from "expo-tracking-transparency";
 
-import {
-  AdsConsent,
-  AdsConsentStatus
-} from "react-native-google-mobile-ads";
+import { AdsConsent, AdsConsentStatus } from "react-native-google-mobile-ads";
 import mobileAds from "react-native-google-mobile-ads/src";
-
-import { initializeApp } from 'firebase/app';
-
-// This alone might be sufficient since Expo handles the config
-const app = initializeApp({});
 
 export {
   // Catch any errors thrown by the Layout component.
-  ErrorBoundary
+  ErrorBoundary,
 } from "expo-router";
 
 export const unstable_settings = {
@@ -45,8 +36,6 @@ export default function RootLayout() {
     ...FontAwesome.font,
   });
 
-  const [adsLoaded, setAdsLoaded] = useState(false);
-
   useEffect(() => {
     const prepare = async () => {
       // TODO: if the ATT doesn't show up, add a small delay
@@ -60,7 +49,6 @@ export default function RootLayout() {
           await AdsConsent.showForm();
         }
         await mobileAds().initialize();
-        setAdsLoaded(true);
       } catch (e) {
         console.log("error", e);
       }

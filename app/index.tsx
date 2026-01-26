@@ -1,3 +1,7 @@
+// AD CONFIGURATION - Replace test ID with your production AdMob Banner Ad Unit ID
+// Get your Banner Ad Unit ID from: https://admob.google.com → Apps → Your App → Ad Units → Banner
+// Test ID: TestIds.ADAPTIVE_BANNER (for development)
+// Production ID: ca-app-pub-XXXXXXXXXX/XXXXXXXXXX (for release)
 import { useGameMode } from "@/hooks/useGameMode";
 import { useHighScore } from "@/hooks/useHighScore";
 import { GameMode } from "@/utils/storage";
