@@ -2,6 +2,7 @@
 // Get your Banner Ad Unit ID from: https://admob.google.com → Apps → Your App → Ad Units → Banner
 // Test ID: TestIds.ADAPTIVE_BANNER (for development)
 // Production ID: ca-app-pub-XXXXXXXXXX/XXXXXXXXXX (for release)
+import { AdMobIds } from "@/constants/AdIds";
 import { useGameMode } from "@/hooks/useGameMode";
 import { useHighScore } from "@/hooks/useHighScore";
 import { GameMode } from "@/utils/storage";
@@ -20,13 +21,10 @@ import {
 import {
   BannerAd,
   BannerAdSize,
-  TestIds,
   useForeground,
 } from "react-native-google-mobile-ads";
 
-const ADAPTIVE_BANNER_adUnitId = __DEV__
-  ? TestIds.ADAPTIVE_BANNER
-  : "ca-app-pub-8296385442547902/6353886207";
+const ADAPTIVE_BANNER_adUnitId = AdMobIds.BANNER;
 
 const { height } = Dimensions.get("window");
 
